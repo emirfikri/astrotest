@@ -10,6 +10,7 @@ import '../../helper/helper.dart';
 import '../../model/drinkcategory_model.dart';
 import '../../model/foodcategory_model.dart';
 import '../../services/api_services.dart';
+import '../individualitemscreen/individualItem.dart';
 import 'widgets/homeCategoryCard.dart';
 import 'widgets/homeHeader.dart';
 import 'widgets/homeLocation.dart';
@@ -54,14 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getListMealsbyCategory() async {
+    print("allMenuLoading $allMenuLoading");
     var rawdata = await getapidata(
         "https://www.themealdb.com/api/json/v1/1/filter.php?c=$selectedCategory");
     var responseData = rawdata['meals'] as List;
     setState(() {
       menuList = responseData.map((e) => FoodModel.fromJson(e)).toList();
-    });
-    menuList.forEach((var data) {
-      print(data.toString());
+      allMenuLoading = false;
     });
   }
 
@@ -96,6 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () async {
                       setState(() {
                         selectedCategory = categoryList[index].name;
+                        allMenuLoading = true;
+                        menuList = [];
                       });
                       await getListMealsbyCategory();
                     },
@@ -127,7 +129,17 @@ class _HomeScreenState extends State<HomeScreen> {
           return Column(
             children: [
               GestureDetector(
-                onTap: () async {},
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => IndividualItemDetails(
+                        category: '',
+                        itemId: menuList[index].id,
+                      ),
+                    ),
+                  );
+                },
                 child: ItemMenuCard(
                   image: Image.network(
                     menuList[index].image,
@@ -173,7 +185,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     children: [
                       if (isLoading) ...[
-                        CircularProgressIndicator(),
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ] else ...[
                         allCategoryList(),
                       ],
@@ -200,13 +214,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   menuList != null && selectedCategory != ''
                       ? allMenuList()
-                      : !allMenuLoading ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child:Text(
+                      : !allMenuLoading
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
                                 "No Category Selected",
                                 style: Helper.getTheme(context).headline5,
-                          ),
-                        ) : CircularProgressIndicator(),
+                              ),
+                            )
+                          : Center(
+                              child: CircularProgressIndicator(),
+                            ),
                   //
                   SizedBox(
                     height: 50,
