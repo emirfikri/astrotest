@@ -1,13 +1,18 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors
 
-import 'package:flutter/gestures.dart';
+import 'individualItemSteps.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import '../../../helper/colors.dart';
 import '../../../helper/constants.dart';
+import 'individualItemIngredient.dart';
 
 class IndividualItemBody extends StatefulWidget {
+  final List ingredients;
+  final String? steps;
+  const IndividualItemBody({Key? key, required this.ingredients, this.steps})
+      : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _IndividualItemBodyState();
@@ -16,25 +21,36 @@ class IndividualItemBody extends StatefulWidget {
 
 class _IndividualItemBodyState extends State<IndividualItemBody>
     with TickerProviderStateMixin {
+  String steps = "";
+  List ingredients = [];
   @override
   void initState() {
+    steps = widget.steps ?? "";
+    if (steps != "") {
+      _views[1] = IndividualSteps(
+        steps: steps,
+      );
+    }
+    ingredients = widget.ingredients;
+
     super.initState();
   }
 
-  static const List<Widget> _tabs = [
+  final List<Widget> _tabs = [
     Center(child: Text("Ingredients")),
     Center(child: Text("Steps")),
     Center(child: Text("Nutrition")),
   ];
 
-  static const List<Widget> _views = [
-    Center(child: Text('Content of Tab One')),
-    Center(child: Text('Content of Tab Two')),
+  final List<Widget> _views = [
+    Text(""),
+    Text(""),
     Center(child: Text('Content of Tab Three')),
   ];
 
   @override
   Widget build(BuildContext context) {
+    _views[0] = IndividualItemIngredient(ingredients: ingredients);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -45,6 +61,7 @@ class _IndividualItemBodyState extends State<IndividualItemBody>
               child: Container(
                 padding:
                     EdgeInsets.symmetric(horizontal: Constants.width * 0.05),
+                margin: EdgeInsets.only(top: 10),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -78,6 +95,9 @@ class _IndividualItemBodyState extends State<IndividualItemBody>
                   ),
                 ),
               ),
+            ),
+            SizedBox(
+              height: Constants.height * 0.01,
             ),
             Expanded(
               child: Container(
