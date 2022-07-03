@@ -32,6 +32,7 @@ class _IndividualItemBodyState extends State<IndividualItemBody>
       );
     }
     ingredients = widget.ingredients;
+    print("ingredients=== $ingredients");
 
     super.initState();
   }
@@ -45,7 +46,10 @@ class _IndividualItemBodyState extends State<IndividualItemBody>
   final List<Widget> _views = [
     Text(""),
     Text(""),
-    Center(child: Text('Content of Tab Three')),
+    Text(
+      'Content of Tab Three',
+      textAlign: TextAlign.center,
+    ),
   ];
 
   @override
@@ -53,62 +57,61 @@ class _IndividualItemBodyState extends State<IndividualItemBody>
     _views[0] = IndividualItemIngredient(ingredients: ingredients);
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-        body: Column(
-          children: [
-            Container(
-              height: Constants.height * 0.05,
-              child: Container(
-                padding:
-                    EdgeInsets.symmetric(horizontal: Constants.width * 0.05),
-                margin: EdgeInsets.only(top: 10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 1,
-                        offset: Offset(0, 1), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: TabBar(
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.grey,
-                    indicatorColor: AppColor.lightred,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    // indicatorPadding: const EdgeInsets.all(10),
-                    indicator: BoxDecoration(
-                      border: Border.all(color: Colors.red),
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppColor.lightred,
-                    ),
-                    physics: BouncingScrollPhysics(),
-                    onTap: (int index) {
-                      print('Tab $index is tapped');
-                    },
-                    enableFeedback: true,
-                    tabs: _tabs,
-                  ),
-                ),
+      child: Column(
+        children: [
+          thisTabbar(),
+          SizedBox(
+            height: Constants.height * 0.01,
+          ),
+          Expanded(
+            child: TabBarView(
+              physics: BouncingScrollPhysics(),
+              children: _views,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  thisTabbar() {
+    return Container(
+      height: Constants.height * 0.05,
+      color: Colors.white,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: Constants.width * 0.05),
+        margin: EdgeInsets.only(top: 10),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: Offset(0, 1), // changes position of shadow
               ),
+            ],
+          ),
+          child: TabBar(
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: AppColor.lightred,
+            indicatorSize: TabBarIndicatorSize.tab,
+            // indicatorPadding: const EdgeInsets.all(10),
+            indicator: BoxDecoration(
+              border: Border.all(color: Colors.red),
+              borderRadius: BorderRadius.circular(5),
+              color: AppColor.lightred,
             ),
-            SizedBox(
-              height: Constants.height * 0.01,
-            ),
-            Expanded(
-              child: Container(
-                height: Constants.height,
-                child: TabBarView(
-                  physics: BouncingScrollPhysics(),
-                  children: _views,
-                ),
-              ),
-            ),
-          ],
+            physics: BouncingScrollPhysics(),
+            onTap: (int index) {
+              print('Tab $index is tapped');
+            },
+            enableFeedback: true,
+            tabs: _tabs,
+          ),
         ),
       ),
     );

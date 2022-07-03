@@ -9,7 +9,14 @@ class IndividualSteps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: Constants.width * 0.05),
-        child: Text("$steps   $steps   $steps $steps"));
+      padding: EdgeInsets.only(
+          left: Constants.width * 0.03,
+          right: Constants.width * 0.03,
+          bottom: Constants.height * 0.08),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Text("$steps "),
+      ),
+    );
   }
 }
