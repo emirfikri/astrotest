@@ -1,5 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors
 
+import 'package:flutter/foundation.dart';
+
 import 'individualItemSteps.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +11,13 @@ import 'individualItemIngredient.dart';
 
 class IndividualItemBody extends StatefulWidget {
   final List ingredients;
+  final List ingredientsmeasure;
   final String? steps;
-  const IndividualItemBody({Key? key, required this.ingredients, this.steps})
+  const IndividualItemBody(
+      {Key? key,
+      required this.ingredients,
+      this.steps,
+      required this.ingredientsmeasure})
       : super(key: key);
 
   @override
@@ -23,15 +30,22 @@ class _IndividualItemBodyState extends State<IndividualItemBody>
     with TickerProviderStateMixin {
   String steps = "";
   List ingredients = [];
+  List ingredientsmeasure = [];
   @override
   void initState() {
     steps = widget.steps ?? "";
+    ingredients = widget.ingredients;
+    ingredientsmeasure = widget.ingredientsmeasure;
     if (steps != "") {
       _views[1] = IndividualSteps(
         steps: steps,
       );
     }
-    ingredients = widget.ingredients;
+    if (ingredients.isNotEmpty) {
+      _views[0] = IndividualItemIngredient(
+          ingredients: ingredients, ingredientsmeasure: ingredientsmeasure);
+    }
+
     print("ingredients=== $ingredients");
 
     super.initState();
@@ -44,8 +58,14 @@ class _IndividualItemBodyState extends State<IndividualItemBody>
   ];
 
   final List<Widget> _views = [
-    Text(""),
-    Text(""),
+    Text(
+      "No ingredients data found",
+      textAlign: TextAlign.center,
+    ),
+    Text(
+      "No steps data found",
+      textAlign: TextAlign.center,
+    ),
     Text(
       'Content of Tab Three',
       textAlign: TextAlign.center,
@@ -54,7 +74,6 @@ class _IndividualItemBodyState extends State<IndividualItemBody>
 
   @override
   Widget build(BuildContext context) {
-    _views[0] = IndividualItemIngredient(ingredients: ingredients);
     return DefaultTabController(
       length: 3,
       child: Column(
@@ -107,7 +126,9 @@ class _IndividualItemBodyState extends State<IndividualItemBody>
             ),
             physics: BouncingScrollPhysics(),
             onTap: (int index) {
-              print('Tab $index is tapped');
+              if (kDebugMode) {
+                print('Tab $index is tapped');
+              }
             },
             enableFeedback: true,
             tabs: _tabs,

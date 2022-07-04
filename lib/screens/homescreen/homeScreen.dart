@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.category == 'Beverage') {
+    if (RegExp(r"beverage", caseSensitive: false).hasMatch(widget.category)) {
       getCategoryDrinks();
     } else {
       getCategoryFoods();
@@ -282,7 +282,8 @@ class ItemMenuCard extends StatelessWidget {
                       width: Constants.width * 0.9,
                       child: Text(
                         _name,
-                        style: Helper.getTheme(context).headline4,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

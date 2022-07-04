@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 import '../../../helper/helper.dart';
@@ -18,7 +20,7 @@ class HomeHeader extends StatelessWidget {
             "Good morning Akila!",
             style: Helper.getTheme(context).headline5,
           ),
-          Icon(Icons.shopping_cart),
+          const Icon(Icons.shopping_cart),
         ],
       ),
     );

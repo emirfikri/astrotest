@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, prefer_typing_uninitialized_variables
 
 import 'package:astrotest/screens/individualitemscreen/widgets/individualItemHeaderImage.dart';
 
@@ -7,7 +7,6 @@ import '../../helper/colors.dart';
 import '../../helper/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../../helper/helper.dart';
 import '../homescreen/homeScreen.dart';
 import 'widgets/individualItemBody.dart';
 import 'widgets/individualItemBottomButton.dart';
@@ -133,6 +132,7 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
                           child: IndividualItemBody(
                             ingredients: detailsItem.ingredients,
                             steps: detailsItem.instructions,
+                            ingredientsmeasure: detailsItem.measure,
                           ),
                         ),
                       ],
