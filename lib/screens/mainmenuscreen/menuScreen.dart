@@ -9,6 +9,12 @@ import '../homescreen/homeScreen.dart';
 import 'widgets/menuCard.dart';
 import '../../globalWidgets/searchBar.dart';
 
+class SearchFieldValidator {
+  static String validate(String? value) {
+    return value!.isEmpty ? "Empty" : "";
+  }
+}
+
 class MenuScreen extends StatelessWidget {
   static const routeName = "/menuScreen";
 
@@ -26,7 +32,9 @@ class MenuScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  SearchBar(title: "Search Food"),
+                  SearchBar(
+                    title: "Search Food",
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -53,62 +61,11 @@ class MenuScreen extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HomeScreen(
-                                          category: "Food",
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: MenuCard(
-                                    imageShape: ClipOval(
-                                      child: SizedBox(
-                                        height: 60,
-                                        width: 60,
-                                        child: Image.asset(
-                                          Helper.getAssetName("western2.jpg"),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    name: "Food",
-                                    count: "120",
-                                  ),
-                                ),
+                                gestureFood(context),
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HomeScreen(
-                                          category: "Beverage",
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: MenuCard(
-                                    imageShape: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: SizedBox(
-                                        height: 60,
-                                        width: 60,
-                                        child: Image.asset(
-                                          Helper.getAssetName("coffee2.jpg"),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    name: "Beverage",
-                                    count: "220",
-                                  ),
-                                ),
+                                gesturebeverage(context),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -122,6 +79,65 @@ class MenuScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget gestureFood(context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(
+              category: "Food",
+            ),
+          ),
+        );
+      },
+      child: MenuCard(
+        imageShape: ClipOval(
+          child: SizedBox(
+            height: 60,
+            width: 60,
+            child: Image.asset(
+              Helper.getAssetName("western2.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        name: "Food",
+        count: "120",
+      ),
+    );
+  }
+
+  Widget gesturebeverage(context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(
+              category: "Beverage",
+            ),
+          ),
+        );
+      },
+      child: MenuCard(
+        imageShape: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: SizedBox(
+            height: 60,
+            width: 60,
+            child: Image.asset(
+              Helper.getAssetName("coffee2.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        name: "Beverage",
+        count: "220",
       ),
     );
   }

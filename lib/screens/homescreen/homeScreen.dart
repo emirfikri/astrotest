@@ -15,6 +15,12 @@ import 'widgets/homeCategoryCard.dart';
 import 'widgets/homeHeader.dart';
 import 'widgets/homeLocation.dart';
 
+class SearchFieldValidator {
+  static String? validate(String? value) {
+    return value!.isEmpty ? "Empty" : "";
+  }
+}
+
 class HomeScreen extends StatefulWidget {
   static const routeName = "/homeScreen";
 

@@ -8,14 +8,21 @@ class IndividualSteps extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: EdgeInsets.only(
-          left: Constants.width * 0.03,
-          right: Constants.width * 0.03,
-          bottom: Constants.height * 0.08),
+        left: Constants.width * 0.03,
+        right: Constants.width * 0.03,
+      ),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        child: Text("$steps "),
+        child: Column(
+          children: [
+            Text("$steps "),
+            SizedBox(
+              height: Constants.height * 0.3,
+            ),
+          ],
+        ),
       ),
     );
   }
