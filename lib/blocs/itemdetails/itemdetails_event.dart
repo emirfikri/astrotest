@@ -18,8 +18,6 @@ class AddFoodDetails extends ItemdetailsEvent {
 
 class GetFoodDetails extends ItemdetailsEvent {}
 
-class GetCacheFoodDetails extends ItemdetailsEvent {}
-
 class FoodDetailsErrorState extends ItemdetailsEvent {
   final String message;
   const FoodDetailsErrorState({required this.message});

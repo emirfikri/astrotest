@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getListMealsbyCategory() async {
     var rawdata = await Future.delayed(
-        Duration(seconds: 2),
+        Duration(seconds: 1),
         () => ApiService().getApiData(
             "https://www.themealdb.com/api/json/v1/1/filter.php?c=$selectedCategory"));
     var responseData = rawdata['meals'] as List;
@@ -102,12 +102,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      setState(() {
-                        selectedCategory = categoryList[index].name;
-                        allMenuLoading = true;
-                        menuList = [];
-                      });
-                      await getListMealsbyCategory();
+                      if (!RegExp(r"beverage", caseSensitive: false)
+                          .hasMatch(widget.category)) {
+                        setState(() {
+                          selectedCategory = categoryList[index].name;
+                          allMenuLoading = true;
+                          menuList = [];
+                        });
+
+                        await getListMealsbyCategory();
+                      }
                     },
                     child: CategoryCard(
                       image: categoryList[index].image != ""
@@ -224,14 +228,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
-                      : menuList != null && selectedCategory != ''
+                      : menuList != null &&
+                              selectedCategory != '' &&
+                              !RegExp(r"beverage", caseSensitive: false)
+                                  .hasMatch(widget.category)
                           ? allMenuList()
                           : Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
-                                "No Category Selected",
-                                style: Helper.getTheme(context).bodySmall,
+                                widget.category != "Beverage"
+                                    ? "No Category Selected"
+                                    : "For Beverages still under development",
+                                style: widget.category != "Beverage"
+                                    ? Helper.getTheme(context).bodySmall
+                                    : Helper.getTheme(context)
+                                        .bodyMedium
+                                        ?.copyWith(color: Colors.red),
                               ),
                             ),
                   SizedBox(

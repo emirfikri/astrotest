@@ -9,12 +9,11 @@ part 'itemdetails_event.dart';
 part 'itemdetails_state.dart';
 
 class ItemdetailsBloc extends Bloc<ItemdetailsEvent, ItemdetailsState> {
-  String id;
-  ItemdetailsBloc({required this.id}) : super(const ItemdetailsState()) {
+  String? id;
+  ItemdetailsBloc({this.id}) : super(const ItemdetailsState()) {
     on<AddFoodDetails>(onAddFoodDetails);
     on<UpdateFoodDetails>(onUpdateFoodDetails);
     on<DeleteFoodDetails>(onDeleteFoodDetails);
-    on<GetCacheFoodDetails>(onGetCacheFoodDetails);
     on<GetFoodDetails>(onGetFoodDetails);
   }
 
@@ -29,6 +28,7 @@ class ItemdetailsBloc extends Bloc<ItemdetailsEvent, ItemdetailsState> {
       detailsItem1 =
           responseData.map((e) => FoodDetailsModel.fromJson(e)).toList();
       var detailsItem = detailsItem1[0];
+
       emit(ItemDetailsLoaded(foodDetail: detailsItem));
 
       //add item to cache
@@ -38,14 +38,11 @@ class ItemdetailsBloc extends Bloc<ItemdetailsEvent, ItemdetailsState> {
     }
   }
 
-  void onGetCacheFoodDetails(
-      GetCacheFoodDetails event, Emitter<ItemdetailsState> emit) {}
-
   void onAddFoodDetails(AddFoodDetails event, Emitter<ItemdetailsState> emit) {
     final state = this.state;
     emit(ItemdetailsState(
         allFoodDetail: List.from(state.allFoodDetail)..add(event.foodDetails)));
-    emit(ItemDetailsLoaded(foodDetail: event.foodDetails));
+    emit(FinishAddnewData(foodDetail: event.foodDetails));
   }
 
   void onUpdateFoodDetails(

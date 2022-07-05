@@ -1,16 +1,14 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, prefer_typing_uninitialized_variables
 
-import 'package:astrotest/blocs/itemdetails/itemdetails_bloc.dart';
 import 'package:astrotest/screens/individualitemscreen/widgets/individualItemHeaderImage.dart';
-import 'package:astrotest/services/api_services.dart';
 
 import '../../blocs/bloc_export.dart';
-import '../../model/fooddetails_model.dart';
 import '../../helper/colors.dart';
 import '../../helper/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../homescreen/homeScreen.dart';
+import '../../helper/shared_configs.dart';
+import '../../model/fooddetails_model.dart';
 import 'widgets/individualItemBody.dart';
 import 'widgets/individualItemBottomButton.dart';
 
@@ -27,47 +25,47 @@ class IndividualItemDetails extends StatefulWidget {
 
 class _IndividualItemDetailsState extends State<IndividualItemDetails> {
   var detailsItem;
+  final SharedConfigs configs = SharedConfigs();
   bool isLoading = true;
   ItemdetailsBloc itemdetailsBloc = ItemdetailsBloc(id: '');
   @override
   void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
     itemdetailsBloc = ItemdetailsBloc(id: widget.itemId);
     itemdetailsBloc.add(GetFoodDetails());
+    checkCache();
     // var cache = checkCache();
     // print("cache $cache");
-    // if (!cache) getDetailItembyId();
+    // getDetailItembyId();
 
     super.initState();
   }
 
-  getAllItemDetailsCache(BuildContext context) {
-    ItemdetailsState state = BlocProvider.of<ItemdetailsBloc>(context).state;
-    state.allFoodDetail.map((foodDetail) {
-      if (widget.itemId.contains(foodDetail.id)) {
-        setState(() {
-          detailsItem = foodDetail;
-        });
-      }
-    });
-    for (var element in state.allFoodDetail) {
-      {
-        print("id saves is === ${element.name}");
-      }
+  checkCache() async {
+    var cache = await configs.readKey("${widget.itemId}");
+    if (cache == null)
+      print("no cache");
+    else {
+      FoodDetailsModel foodCache = FoodDetailsModel.deserialize(cache);
+      // print("foodCache ${foodCache.runtimeType} $foodCache ");
+      setState(() {
+        detailsItem = foodCache;
+      });
     }
   }
 
-  Future getDetailItembyId() async {
-    var detailsItem1;
-    var rawdata = await ApiService().getApiData(
-        "https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.itemId}");
-    var responseData = rawdata['meals'];
-    detailsItem1 =
-        responseData.map((e) => FoodDetailsModel.fromJson(e)).toList();
-    setState(() {
-      detailsItem = detailsItem1[0];
-      isLoading = false;
-    });
-  }
+  // Future getDetailItembyId() async {
+  //   var detailsItem1;
+  //   var rawdata = await ApiService().getApiData(
+  //       "https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.itemId}");
+  //   var responseData = rawdata['meals'];
+  //   detailsItem1 =
+  //       responseData.map((e) => FoodDetailsModel.fromJson(e)).toList();
+  //   setState(() {
+  //     detailsItem = detailsItem1[0];
+  //     isLoading = false;
+  //   });
+  // }
 
   imageHeaderButton() {
     return SafeArea(
@@ -139,16 +137,18 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
         create: (_) => itemdetailsBloc,
         child: BlocBuilder<ItemdetailsBloc, ItemdetailsState>(
           builder: (context, state) {
-            if (state is ItemdetailsInitial) {
+            if (detailsItem != null) {
+              return bodyIndividualItem();
+            } else if (state is ItemdetailsInitial) {
               return loadingBody();
             } else if (state is ItemDetailsLoading) {
               return loadingBody();
             } else if (state is ItemDetailsLoaded) {
+              // print(
+              //     "state.foodDetail.serialize()== ${state.foodDetail.serialize().runtimeType} ${state.foodDetail.serialize()}");
+              configs.writeKey(
+                  "${widget.itemId}", state.foodDetail.serialize());
               detailsItem = state.foodDetail;
-              context
-                  .read<ItemdetailsBloc>()
-                  .add(AddFoodDetails(foodDetails: detailsItem));
-
               return bodyIndividualItem();
             } else {
               return Center(

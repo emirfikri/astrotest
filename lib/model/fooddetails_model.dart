@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 
+import 'dart:collection';
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 class FoodDetailsModel extends Equatable {
@@ -34,7 +37,7 @@ class FoodDetailsModel extends Equatable {
     required this.datemodified,
   });
 
-  factory FoodDetailsModel.fromJson(Map<String, dynamic> json) {
+  factory FoodDetailsModel.fromJson(Map<dynamic, dynamic> json) {
     final id = json['idMeal'] ?? '';
     final image = json['strMealThumb'] ?? '';
     final name = json['strMeal'] ?? '';
@@ -70,7 +73,7 @@ class FoodDetailsModel extends Equatable {
         datemodified: datemodified);
   }
 
-  dynamic toJson() => {
+  Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
         'image': image,
@@ -86,6 +89,29 @@ class FoodDetailsModel extends Equatable {
         'creativecommonsconfirmed': creativecommonsconfirmed,
         'datemodified': datemodified
       };
+
+  static FoodDetailsModel deserialize(String thisdata) {
+    Map decodeddata = jsonDecode((thisdata));
+    return FoodDetailsModel(
+        id: decodeddata['id'],
+        image: decodeddata['image'],
+        name: decodeddata['name'],
+        category: decodeddata['category'],
+        area: decodeddata['area'],
+        instructions: decodeddata['instructions'],
+        tags: decodeddata['tags'],
+        youtubelink: decodeddata['youtubelink'],
+        ingredients: decodeddata['ingredients'],
+        measure: decodeddata['measure'],
+        source: decodeddata['source'],
+        imagesource: decodeddata['imagesource'],
+        creativecommonsconfirmed: decodeddata['creativecommonsconfirmed'],
+        datemodified: decodeddata['datemodified']);
+  }
+
+  String serialize() {
+    return json.encode(toJson());
+  }
 
   @override
   String toString() {
