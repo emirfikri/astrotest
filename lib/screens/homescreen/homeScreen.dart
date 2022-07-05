@@ -14,6 +14,7 @@ import '../individualitemscreen/individualItem.dart';
 import 'widgets/homeCategoryCard.dart';
 import 'widgets/homeHeader.dart';
 import 'widgets/homeLocation.dart';
+import 'widgets/itemMenuCard.dart';
 
 class SearchFieldValidator {
   static String? validate(String? value) {
@@ -49,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getCategoryFoods() async {
-    var rawdata = await getapidata(
-        "https://www.themealdb.com/api/json/v1/1/categories.php");
+    var rawdata = await ApiService()
+        .getApiData("https://www.themealdb.com/api/json/v1/1/categories.php");
     var responseData = rawdata['categories'] as List;
     setState(() {
       categoryList = responseData.map((e) => FoodCategory.fromJson(e)).toList();
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   getListMealsbyCategory() async {
     var rawdata = await Future.delayed(
         Duration(seconds: 2),
-        () => getapidata(
+        () => ApiService().getApiData(
             "https://www.themealdb.com/api/json/v1/1/filter.php?c=$selectedCategory"));
     var responseData = rawdata['meals'] as List;
     setState(() {
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getCategoryDrinks() async {
-    var rawdata = await getapidata(
+    var rawdata = await ApiService().getApiData(
         "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list");
     var responseData = rawdata['drinks'] as List;
     setState(() {
@@ -244,112 +245,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
-
-class ItemMenuCard extends StatelessWidget {
-  const ItemMenuCard({
-    Key? key,
-    required String name,
-    required Image image,
-    required String selectedCategory,
-  })  : _image = image,
-        _name = name,
-        _selectedCategory = selectedCategory,
-        super(key: key);
-
-  final String _name;
-  final Image _image;
-  final String _selectedCategory;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: Constants.height * 0.35,
-      width: double.infinity,
-      child: Column(
-        children: [
-          SizedBox(
-            height: Constants.height * 0.2,
-            width: double.infinity,
-            child: _image,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: Constants.width * 0.9,
-                      child: Text(
-                        _name,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.star,
-                      color: AppColor.red,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "4.9",
-                      style: TextStyle(
-                        color: AppColor.red,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("(124 ratings)"),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("Cafe"),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(
-                        ".",
-                        style: TextStyle(
-                          color: AppColor.red,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(_selectedCategory),
-                  ],
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-Future getapidata(String url) async {
-  return await ApiService().getCategoryList(url);
 }

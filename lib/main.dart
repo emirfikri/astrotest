@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'blocs/bloc_export.dart';
 import 'screens/homescreen/homeScreen.dart';
 import 'screens/splashscreen/animatedsplashscreen.dart';
 
 void main() {
-  runApp(const MyApp());
+  BlocOverrides.runZoned(
+    () => runApp(const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,17 +15,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return BlocProvider(
+      create: (context) => ItemdetailsBloc(id: ''),
+      child: MaterialApp(
+        title: 'Astro Test',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: AnimatedSplashScreen(),
+        routes: {
+          HomeScreen.routeName: (context) => HomeScreen(
+                category: 'food',
+              ),
+        },
       ),
-      home: AnimatedSplashScreen(),
-      routes: {
-        HomeScreen.routeName: (context) => HomeScreen(
-              category: 'food',
-            ),
-      },
     );
   }
 }

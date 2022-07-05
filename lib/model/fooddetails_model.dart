@@ -1,4 +1,8 @@
-class FoodDetailsModel {
+// ignore_for_file: prefer_const_constructors_in_immutables
+
+import 'package:equatable/equatable.dart';
+
+class FoodDetailsModel extends Equatable {
   final String id;
   final String image;
   final String name;
@@ -87,4 +91,22 @@ class FoodDetailsModel {
   String toString() {
     return toJson().toString();
   }
+
+  @override
+  List<Object> get props => [
+        id,
+        image,
+        name,
+        category,
+        area,
+        instructions,
+        tags,
+        youtubelink,
+        ingredients,
+        measure,
+        source,
+        imagesource,
+        creativecommonsconfirmed,
+        datemodified
+      ];
 }

@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, prefer_typing_uninitialized_variables
 
+import 'package:astrotest/blocs/itemdetails/itemdetails_bloc.dart';
 import 'package:astrotest/screens/individualitemscreen/widgets/individualItemHeaderImage.dart';
+import 'package:astrotest/services/api_services.dart';
 
+import '../../blocs/bloc_export.dart';
 import '../../model/fooddetails_model.dart';
 import '../../helper/colors.dart';
 import '../../helper/constants.dart';
@@ -25,15 +28,37 @@ class IndividualItemDetails extends StatefulWidget {
 class _IndividualItemDetailsState extends State<IndividualItemDetails> {
   var detailsItem;
   bool isLoading = true;
+  ItemdetailsBloc itemdetailsBloc = ItemdetailsBloc(id: '');
   @override
   void initState() {
-    getDetailsId();
+    itemdetailsBloc = ItemdetailsBloc(id: widget.itemId);
+    itemdetailsBloc.add(GetFoodDetails());
+    // var cache = checkCache();
+    // print("cache $cache");
+    // if (!cache) getDetailItembyId();
+
     super.initState();
   }
 
-  getDetailsId() async {
+  getAllItemDetailsCache(BuildContext context) {
+    ItemdetailsState state = BlocProvider.of<ItemdetailsBloc>(context).state;
+    state.allFoodDetail.map((foodDetail) {
+      if (widget.itemId.contains(foodDetail.id)) {
+        setState(() {
+          detailsItem = foodDetail;
+        });
+      }
+    });
+    for (var element in state.allFoodDetail) {
+      {
+        print("id saves is === ${element.name}");
+      }
+    }
+  }
+
+  Future getDetailItembyId() async {
     var detailsItem1;
-    var rawdata = await getapidata(
+    var rawdata = await ApiService().getApiData(
         "https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.itemId}");
     var responseData = rawdata['meals'];
     detailsItem1 =
@@ -110,40 +135,68 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: !isLoading
-          ? SingleChildScrollView(
-              child: Stack(
-                children: [
-                  IndividualItemImageHeader(
-                    image: detailsItem.image,
+      body: BlocProvider(
+        create: (_) => itemdetailsBloc,
+        child: BlocBuilder<ItemdetailsBloc, ItemdetailsState>(
+          builder: (context, state) {
+            if (state is ItemdetailsInitial) {
+              return loadingBody();
+            } else if (state is ItemDetailsLoading) {
+              return loadingBody();
+            } else if (state is ItemDetailsLoaded) {
+              detailsItem = state.foodDetail;
+              context
+                  .read<ItemdetailsBloc>()
+                  .add(AddFoodDetails(foodDetails: detailsItem));
+
+              return bodyIndividualItem();
+            } else {
+              return Center(
+                child: Text("Unable To fetch Data"),
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget loadingBody() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget bodyIndividualItem() {
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          IndividualItemImageHeader(
+            image: detailsItem.image,
+          ),
+          imageHeaderButton(),
+          SafeArea(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: Constants.height * 0.3,
+                ),
+                BottomButton(),
+                Container(
+                  color: Colors.white,
+                  height: Constants.height * 0.7,
+                  width: double.infinity,
+                  child: IndividualItemBody(
+                    ingredients: detailsItem.ingredients,
+                    steps: detailsItem.instructions,
+                    ingredientsmeasure: detailsItem.measure,
                   ),
-                  imageHeaderButton(),
-                  SafeArea(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: Constants.height * 0.3,
-                        ),
-                        BottomButton(),
-                        Container(
-                          color: Colors.white,
-                          height: Constants.height * 0.7,
-                          width: double.infinity,
-                          child: IndividualItemBody(
-                            ingredients: detailsItem.ingredients,
-                            steps: detailsItem.instructions,
-                            ingredientsmeasure: detailsItem.measure,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : Center(
-              child: CircularProgressIndicator(),
+                ),
+              ],
             ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -38,28 +38,18 @@ class _IndividualItemIngredientState extends State<IndividualItemIngredient> {
     ingredientsmeasure = widget.ingredientsmeasure;
     print(ingredientsmeasure);
     for (var element in ingredientsmeasure) {
-      if (element != "" && element != null) {
-        RegExp removenumber = RegExp(r"[\d\/\ ]");
+      if (element.toString().isNotEmpty && element != null) {
+        RegExp removenumber = RegExp(r"[\d\/\ \-]");
         var newmeasurementtype =
             element.toString().replaceAll(removenumber, '');
         measurementtype.add(newmeasurementtype);
 
         //take number of count unit
-        int? intValue = int.tryParse(element.replaceAll(RegExp('[^0-9]'), ''));
+        int? intValue = int.tryParse(element.replaceAll(RegExp(r'[^0-9]'), ''));
         measurementnumber.add(intValue);
         originalMeasurement.add(intValue); //original quantity for addon
       }
     }
-    measurementtype.forEach((element) {
-      if (kDebugMode) {
-        print("measurementtype $element");
-      }
-    });
-    measurementnumber.forEach((element) {
-      if (kDebugMode) {
-        print("measurementnumber $element");
-      }
-    });
   }
 
   getIngredientImage() {
@@ -230,8 +220,8 @@ class _IndividualItemIngredientState extends State<IndividualItemIngredient> {
                                       ),
                                       // ${widget.ingredientsmeasure[index]}
                                       Text(measurementnumber[index] != null
-                                          ? "| ${measurementnumber[index]} ${measurementtype[index]}"
-                                          : "|| $nonumberingredients ${measurementtype[index]}"),
+                                          ? "${measurementnumber[index]} ${measurementtype[index]}"
+                                          : "$nonumberingredients ${measurementtype[index]}"),
                                     ],
                                   ),
                                 ],

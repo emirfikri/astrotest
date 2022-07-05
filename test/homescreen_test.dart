@@ -1,6 +1,7 @@
 import 'package:astrotest/model/food_model.dart';
 import 'package:astrotest/model/foodcategory_model.dart';
 import 'package:astrotest/screens/homescreen/homeScreen.dart';
+import 'package:astrotest/services/api_services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> main() async {
@@ -15,8 +16,8 @@ Future<void> main() async {
   });
 
   List<FoodModel> foodviewmodel = [];
-  var rawdata = await getapidata(
-      "https://www.themealdb.com/api/json/v1/1/filter.php?c=Beef");
+  var rawdata = await ApiService()
+      .getApiData("https://www.themealdb.com/api/json/v1/1/filter.php?c=Beef");
   var responseData = rawdata['meals'] as List;
   var menuList = responseData.map((e) => FoodModel.fromJson(e)).toList();
   foodviewmodel.add(menuList[0]);
@@ -31,8 +32,8 @@ Future<void> main() async {
   });
 
   List<FoodCategory> foodcategorymodel = [];
-  var rawdatafoodcategory = await getapidata(
-      "https://www.themealdb.com/api/json/v1/1/categories.php");
+  var rawdatafoodcategory = await ApiService()
+      .getApiData("https://www.themealdb.com/api/json/v1/1/categories.php");
   var responseDatafoodcategory = rawdatafoodcategory['categories'] as List;
   var categoryList =
       responseDatafoodcategory.map((e) => FoodCategory.fromJson(e)).toList();

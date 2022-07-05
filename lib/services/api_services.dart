@@ -12,7 +12,7 @@ class ApiService {
   String? devicetoken;
   Dio dio = Dio();
 
-  Future getCategoryList(String linkUrl) async {
+  Future getApiData(String linkUrl) async {
     // var url = "http://avisena.com.my/API/patient/create.php";
     String url = linkUrl;
     var data;
