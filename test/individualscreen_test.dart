@@ -23,7 +23,7 @@ Future<void> main() async {
   FoodDetailsModel sessiontoFoodDetails =
       FoodDetailsModel.deserialize(mockmodeltosessionstorage);
 
-  test("test", () {
+  test("mockmodel to json serialize and deserialize to fooddetailsmodel", () {
     expect(mockmodel.runtimeType, FoodDetailsModel);
     expect(mockmodeltosessionstorage.runtimeType,
         String); // serialize to string to save on storage session
