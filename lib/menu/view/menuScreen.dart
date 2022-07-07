@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import '../../../configs/helper/colors.dart';
+import '../../../theme/colors.dart';
 import '../../../configs/helper/constants.dart';
 import '../../../configs/helper/helper.dart';
-import '../../../home/presentation/pages/homeScreen.dart';
+import '../../../home/view/view.dart';
 import '../widgets/searchBar.dart';
 import '../widgets/menuCard.dart';
 import '../widgets/menuHeader.dart';
@@ -14,7 +14,11 @@ String? validate(String? value) {
 }
 
 class MenuScreen extends StatelessWidget {
-  static const routeName = "/menuScreen";
+  static Route<void> route() {
+    return MaterialPageRoute(
+      builder: (context) => MenuScreen(),
+    );
+  }
 
   MenuScreen({Key? key}) : super(key: key);
   final TextEditingController searchtextcontroller = TextEditingController();
@@ -88,10 +92,8 @@ class MenuScreen extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(
-              category: "Food",
-            ),
+          HomeScreen.route(
+            category: "Food",
           ),
         );
       },
@@ -117,10 +119,8 @@ class MenuScreen extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(
-              category: "Beverage",
-            ),
+          HomeScreen.route(
+            category: "Beverage",
           ),
         );
       },

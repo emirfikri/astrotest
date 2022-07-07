@@ -1,4 +1,3 @@
-import 'package:astrotest/helper/shared_configs.dart';
 import 'package:astrotest/model/fooddetails_model.dart';
 import 'package:astrotest/services/api_services.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -1,34 +1,11 @@
 import 'package:flutter/material.dart';
+import 'app/app.dart';
+import 'app/app_bloc_observer.dart';
 import 'blocs/bloc_export.dart';
-import 'home/presentation/pages/homeScreen.dart';
-import 'splashscreen/presentation/pages/animatedsplashscreen.dart';
 
 void main() {
   BlocOverrides.runZoned(
-    () => runApp(const MyApp()),
+    () => runApp(const App()),
+    blocObserver: AppBlocObserver(),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ItemdetailsBloc(id: ''),
-      child: MaterialApp(
-        title: 'Astro Test',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: AnimatedSplashScreen(),
-        routes: {
-          HomeScreen.routeName: (context) => HomeScreen(
-                category: 'food',
-              ),
-        },
-      ),
-    );
-  }
 }

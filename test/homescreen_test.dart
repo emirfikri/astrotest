@@ -1,17 +1,17 @@
-import 'package:astrotest/model/food_model.dart';
-import 'package:astrotest/model/foodcategory_model.dart';
-import 'package:astrotest/screens/homescreen/homeScreen.dart';
+import 'package:astrotest/home/models/foodcategory_model.dart';
+import 'package:astrotest/home/view/homeScreen.dart';
+import 'package:astrotest/home/models/food_model.dart';
 import 'package:astrotest/services/api_services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> main() async {
   test('empty search bar return error', () {
-    final result = SearchFieldValidator.validate('');
+    final result = validate('');
     expect(result, 'Empty');
   });
 
   test('non-empty email returns null', () {
-    final result = SearchFieldValidator.validate('email');
+    final result = validate('email');
     expect(result, '');
   });
 

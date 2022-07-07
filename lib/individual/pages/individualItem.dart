@@ -2,7 +2,7 @@
 
 import '../../../blocs/bloc_export.dart';
 import 'package:flutter/material.dart';
-import '../../../configs/helper/colors.dart';
+import '../../../theme/colors.dart';
 import '../../../configs/helper/constants.dart';
 import '../../../configs/shared_configs.dart';
 import '../../../model/fooddetails_model.dart';

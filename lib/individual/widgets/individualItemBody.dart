@@ -2,7 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 
-import '../../../configs/helper/colors.dart';
+import '../../../theme/colors.dart';
 import '../../../configs/helper/constants.dart';
 import 'individualItemSteps.dart';
 import 'package:flutter/material.dart';

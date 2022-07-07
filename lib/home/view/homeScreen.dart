@@ -1,23 +1,24 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, prefer_typing_uninitialized_variables
 
+import 'package:flutter/cupertino.dart';
+
 import '../../../configs/helper/helper.dart';
-import '../../../individual/presentation/pages/individualItem.dart';
-import '../../../model/food_model.dart';
+import '../models/food_model.dart';
 import 'package:flutter/material.dart';
 
-import '../../../model/drinkcategory_model.dart';
-import '../../../model/foodcategory_model.dart';
 import '../../../services/api_services.dart';
+import '../../individual/pages/view.dart';
+import '../bloc/block_export.dart';
+import '../models/drinkcategory_model.dart';
+import '../models/foodcategory_model.dart';
 import '../widgets/homeCategoryCard.dart';
 import '../widgets/homeHeader.dart';
 import '../widgets/homeLocation.dart';
 import '../widgets/itemMenuCard.dart';
 import '../widgets/searchBar.dart';
 
-class SearchFieldValidator {
-  static String? validate(String? value) {
-    return value!.isEmpty ? "Empty" : "";
-  }
+String? validate(String? value) {
+  return value!.isEmpty ? "Empty" : "";
 }
 
 class HomeScreen extends StatefulWidget {
@@ -27,12 +28,20 @@ class HomeScreen extends StatefulWidget {
 
   HomeScreen({Key? key, required this.category}) : super(key: key);
 
+  static Route<void> route({required String category}) {
+    return MaterialPageRoute(
+      builder: (context) => HomeScreen(
+        category: category,
+      ),
+    );
+  }
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var categoryList;
+  final HomeBloc homeBloc = HomeBloc();
   var menuList;
   bool isLoading = true;
   bool allMenuLoading = false;
@@ -40,12 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController searchtextcontroller = TextEditingController();
   @override
   void initState() {
+    homeBloc.add(GetFoodCategory());
     super.initState();
-    if (RegExp(r"beverage", caseSensitive: false).hasMatch(widget.category)) {
-      getCategoryDrinks();
-    } else {
-      getCategoryFoods();
-    }
+    // if (RegExp(r"beverage", caseSensitive: false).hasMatch(widget.category)) {
+    //   getCategoryDrinks();
+    // } else {
+    //   getCategoryFoods();
+    // }
   }
 
   getCategoryFoods() async {
@@ -53,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .getApiData("https://www.themealdb.com/api/json/v1/1/categories.php");
     var responseData = rawdata['categories'] as List;
     setState(() {
-      categoryList = responseData.map((e) => FoodCategory.fromJson(e)).toList();
+      // categoryList = responseData.map((e) => FoodCategory.fromJson(e)).toList();
     });
     setState(() {
       isLoading = false;
@@ -77,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
         "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list");
     var responseData = rawdata['drinks'] as List;
     setState(() {
-      categoryList =
-          responseData.map((e) => DrinkCategory.fromJson(e)).toList();
+      // categoryList =
+      //     responseData.map((e) => DrinkCategory.fromJson(e)).toList();
     });
 
     setState(() {
@@ -86,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Widget allCategoryList() {
+  Widget allCategoryList(BuildContext context, {required thismodel}) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
@@ -95,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            itemCount: categoryList.length,
+            itemCount: thismodel.length,
             itemBuilder: (context, index) {
               return Row(
                 children: [
@@ -104,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (!RegExp(r"beverage", caseSensitive: false)
                           .hasMatch(widget.category)) {
                         setState(() {
-                          selectedCategory = categoryList[index].name;
+                          selectedCategory = thismodel[index].name;
                           allMenuLoading = true;
                           menuList = [];
                         });
@@ -113,11 +123,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                     child: CategoryCard(
-                      image: categoryList[index].image != ""
-                          ? Image.network(categoryList[index].image)
+                      image: thismodel[index].image != ""
+                          ? Image.network(thismodel[index].image)
                           : Image.asset(
                               Helper.getAssetName("drinksdefault.png")),
-                      name: categoryList[index].name,
+                      name: thismodel[index].name,
                     ),
                   ),
                   SizedBox(
@@ -167,6 +177,48 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return homeBody();
+  }
+
+  Widget test() {
+    return BlocProvider(
+      create: (_) => homeBloc,
+      child: BlocListener<HomeBloc, HomeState>(
+        listener: (context, state) {
+          if (state is HomeError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message!),
+              ),
+            );
+          }
+        },
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            if (state is HomeInitial) {
+              return _buildLoading();
+            } else if (state is HomeLoading) {
+              return _buildLoading();
+            } else if (state is FoodCategoryLoaded) {
+              return allCategoryList(
+                context,
+                thismodel: state.foodCategory,
+              );
+            } else if (state is DrinkCategoryLoaded) {
+              return allCategoryList(
+                context,
+                thismodel: state.drinkCategory,
+              );
+            } else {
+              return _buildLoading();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  homeBody() {
     return Scaffold(
       body: Stack(
         children: [
@@ -196,13 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Column(
                     children: [
-                      if (isLoading) ...[
-                        Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ] else ...[
-                        allCategoryList(),
-                      ],
+                      test(),
                     ],
                   ),
                   SizedBox(
@@ -258,4 +304,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  Widget _buildLoading() => Center(child: CupertinoActivityIndicator());
 }

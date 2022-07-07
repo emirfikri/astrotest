@@ -1,7 +1,8 @@
 import 'dart:async';
 import '../../../configs/size_config.dart';
-import '../../../menu/presentation/pages/menuScreen.dart';
 import 'package:flutter/material.dart';
+
+import '../../menu/view/view.dart';
 
 // ignore: use_key_in_widget_constructors
 class AnimatedSplashScreen extends StatefulWidget {
@@ -21,12 +22,7 @@ class SplashScreenState extends State<AnimatedSplashScreen>
   }
 
   Future<void> navigationPage() async {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MenuScreen(),
-      ),
-    );
+    Navigator.pushReplacement(context, MenuScreen.route());
   }
 
   @override
@@ -56,6 +52,7 @@ class SplashScreenState extends State<AnimatedSplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -81,6 +78,5 @@ class SplashScreenState extends State<AnimatedSplashScreen>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
