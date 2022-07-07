@@ -1,8 +1,7 @@
 import 'dart:async';
-import '../mainmenuscreen/menuScreen.dart';
+import '../../../configs/size_config.dart';
+import '../../../menu/presentation/pages/menuScreen.dart';
 import 'package:flutter/material.dart';
-
-import '../../helper/size_config.dart';
 
 // ignore: use_key_in_widget_constructors
 class AnimatedSplashScreen extends StatefulWidget {
@@ -25,7 +24,7 @@ class SplashScreenState extends State<AnimatedSplashScreen>
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (_) => const MenuScreen(),
+        builder: (_) => MenuScreen(),
       ),
     );
   }

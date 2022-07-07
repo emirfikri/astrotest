@@ -1,10 +1,11 @@
-// ignore: file_names
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
-import '../../../helper/helper.dart';
+import '../../../configs/helper/helper.dart';
 
-class MenuHeader extends StatelessWidget {
-  const MenuHeader({Key? key}) : super(key: key);
+class HomeHeader extends StatelessWidget {
+  const HomeHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +17,10 @@ class MenuHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Menu",
+            "Good morning Akila!",
             style: Helper.getTheme(context).headline5,
           ),
-          const Icon(Icons.shopping_cart)
+          const Icon(Icons.shopping_cart),
         ],
       ),
     );

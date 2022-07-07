@@ -1,20 +1,18 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, prefer_typing_uninitialized_variables
 
-import '../../helper/constants.dart';
-import '../../model/food_model.dart';
+import '../../../configs/helper/helper.dart';
+import '../../../individual/presentation/pages/individualItem.dart';
+import '../../../model/food_model.dart';
 import 'package:flutter/material.dart';
 
-import '../../globalWidgets/searchBar.dart';
-import '../../helper/colors.dart';
-import '../../helper/helper.dart';
-import '../../model/drinkcategory_model.dart';
-import '../../model/foodcategory_model.dart';
-import '../../services/api_services.dart';
-import '../individualitemscreen/individualItem.dart';
-import 'widgets/homeCategoryCard.dart';
-import 'widgets/homeHeader.dart';
-import 'widgets/homeLocation.dart';
-import 'widgets/itemMenuCard.dart';
+import '../../../model/drinkcategory_model.dart';
+import '../../../model/foodcategory_model.dart';
+import '../../../services/api_services.dart';
+import '../widgets/homeCategoryCard.dart';
+import '../widgets/homeHeader.dart';
+import '../widgets/homeLocation.dart';
+import '../widgets/itemMenuCard.dart';
+import '../widgets/searchBar.dart';
 
 class SearchFieldValidator {
   static String? validate(String? value) {
@@ -39,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = true;
   bool allMenuLoading = false;
   String selectedCategory = '';
+  final TextEditingController searchtextcontroller = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -190,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SearchBar(
                     title: "Search Food",
+                    controller: searchtextcontroller,
                   ),
                   SizedBox(
                     height: 20,

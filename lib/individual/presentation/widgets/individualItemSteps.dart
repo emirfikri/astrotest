@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../helper/constants.dart';
+import '../../../configs/helper/constants.dart';
 
 class IndividualSteps extends StatelessWidget {
   final String steps;

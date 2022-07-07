@@ -1,16 +1,14 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, prefer_typing_uninitialized_variables
 
-import 'package:astrotest/screens/individualitemscreen/widgets/individualItemHeaderImage.dart';
-
-import '../../blocs/bloc_export.dart';
-import '../../helper/colors.dart';
-import '../../helper/constants.dart';
+import '../../../blocs/bloc_export.dart';
 import 'package:flutter/material.dart';
-
-import '../../helper/shared_configs.dart';
-import '../../model/fooddetails_model.dart';
-import 'widgets/individualItemBody.dart';
-import 'widgets/individualItemBottomButton.dart';
+import '../../../configs/helper/colors.dart';
+import '../../../configs/helper/constants.dart';
+import '../../../configs/shared_configs.dart';
+import '../../../model/fooddetails_model.dart';
+import '../widgets/individualItemBody.dart';
+import '../widgets/individualItemBottomButton.dart';
+import '../widgets/individualItemHeaderImage.dart';
 
 class IndividualItemDetails extends StatefulWidget {
   final String category;
@@ -26,7 +24,6 @@ class IndividualItemDetails extends StatefulWidget {
 class _IndividualItemDetailsState extends State<IndividualItemDetails> {
   var detailsItem;
   final SharedConfigs configs = SharedConfigs();
-  bool isLoading = true;
   ItemdetailsBloc itemdetailsBloc = ItemdetailsBloc(id: '');
   @override
   void initState() {

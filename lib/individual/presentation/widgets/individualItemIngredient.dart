@@ -3,8 +3,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../helper/colors.dart';
-import '../../../helper/constants.dart';
+import '../../../configs/helper/colors.dart';
+import '../../../configs/helper/constants.dart';
 
 class IndividualItemIngredient extends StatefulWidget {
   final List ingredients;

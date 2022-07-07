@@ -7,9 +7,6 @@ import 'package:dio/dio.dart';
 class ApiService {
   // final AsyncMemoizer _memoizer = AsyncMemoizer();
   ApiService();
-  String? userId;
-  String? accessToken;
-  String? devicetoken;
   Dio dio = Dio();
 
   Future getApiData(String linkUrl) async {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../helper/colors.dart';
-import '../../../helper/helper.dart';
+import '../../../configs/helper/colors.dart';
+import '../../../configs/helper/helper.dart';
 
 class MenuCard extends StatelessWidget {
   const MenuCard({

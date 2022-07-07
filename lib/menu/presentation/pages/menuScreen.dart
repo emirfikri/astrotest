@@ -1,24 +1,23 @@
 // ignore_for_file: prefer_const_constructors
 
-import '../../helper/constants.dart';
-import 'widgets/menuHeader.dart';
 import 'package:flutter/material.dart';
-import '../../helper/colors.dart';
-import '../../helper/helper.dart';
-import '../homescreen/homeScreen.dart';
-import 'widgets/menuCard.dart';
-import '../../globalWidgets/searchBar.dart';
+import '../../../configs/helper/colors.dart';
+import '../../../configs/helper/constants.dart';
+import '../../../configs/helper/helper.dart';
+import '../../../home/presentation/pages/homeScreen.dart';
+import '../widgets/searchBar.dart';
+import '../widgets/menuCard.dart';
+import '../widgets/menuHeader.dart';
 
-class SearchFieldValidator {
-  static String validate(String? value) {
-    return value!.isEmpty ? "Empty" : "";
-  }
+String? validate(String? value) {
+  return value!.isEmpty ? "Empty" : "";
 }
 
 class MenuScreen extends StatelessWidget {
   static const routeName = "/menuScreen";
 
-  const MenuScreen({Key? key}) : super(key: key);
+  MenuScreen({Key? key}) : super(key: key);
+  final TextEditingController searchtextcontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +33,7 @@ class MenuScreen extends StatelessWidget {
                   ),
                   SearchBar(
                     title: "Search Food",
+                    controller: searchtextcontroller,
                   ),
                   const SizedBox(
                     height: 20,

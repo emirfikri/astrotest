@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'blocs/bloc_export.dart';
-import 'screens/homescreen/homeScreen.dart';
-import 'screens/splashscreen/animatedsplashscreen.dart';
+import 'home/presentation/pages/homeScreen.dart';
+import 'splashscreen/presentation/pages/animatedsplashscreen.dart';
 
 void main() {
   BlocOverrides.runZoned(

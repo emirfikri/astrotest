@@ -2,11 +2,11 @@
 
 import 'package:flutter/foundation.dart';
 
+import '../../../configs/helper/colors.dart';
+import '../../../configs/helper/constants.dart';
 import 'individualItemSteps.dart';
 import 'package:flutter/material.dart';
 
-import '../../../helper/colors.dart';
-import '../../../helper/constants.dart';
 import 'individualItemIngredient.dart';
 
 class IndividualItemBody extends StatefulWidget {

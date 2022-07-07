@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../helper/colors.dart';
-import '../helper/helper.dart';
-import '../screens/homescreen/homeScreen.dart';
+import '../../../configs/helper/colors.dart';
+import '../../../configs/helper/helper.dart';
 
 class SearchBar extends StatelessWidget {
   final String title;
+  final TextEditingController controller;
   SearchBar({
     Key? key,
     required this.title,
+    required this.controller,
   }) : super(key: key);
-  TextEditingController? controller;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,7 +24,7 @@ class SearchBar extends StatelessWidget {
           color: AppColor.placeholderBg,
         ),
         child: TextFormField(
-          validator: SearchFieldValidator.validate,
+          controller: controller,
           decoration: InputDecoration(
             border: InputBorder.none,
             prefixIcon: Image.asset(
