@@ -2,7 +2,7 @@ import 'dart:async';
 import '../../../configs/size_config.dart';
 import 'package:flutter/material.dart';
 
-import '../../menu/view/view.dart';
+import '../../menu/menu_page.dart';
 
 // ignore: use_key_in_widget_constructors
 class AnimatedSplashScreen extends StatefulWidget {

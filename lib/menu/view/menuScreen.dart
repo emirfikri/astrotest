@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../theme/colors.dart';
 import '../../../configs/helper/constants.dart';
 import '../../../configs/helper/helper.dart';
-import '../../../home/view/view.dart';
+import '../../home/home_page.dart';
 import '../widgets/searchBar.dart';
 import '../widgets/menuCard.dart';
 import '../widgets/menuHeader.dart';
@@ -65,11 +65,21 @@ class MenuScreen extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                gestureFood(context),
+                                PushToHome(
+                                  category: "Food",
+                                  count: '120',
+                                  image: Helper.getAssetName("western2.jpg"),
+                                  name: 'Food',
+                                ),
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                gesturebeverage(context),
+                                PushToHome(
+                                  category: "Beverage",
+                                  count: '220',
+                                  image: Helper.getAssetName("coffee2.jpg"),
+                                  name: 'Beverage',
+                                ),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -86,14 +96,29 @@ class MenuScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget gestureFood(context) {
+class PushToHome extends StatelessWidget {
+  final String category;
+  final String image;
+  final String name;
+  final String count;
+  const PushToHome({
+    Key? key,
+    required this.category,
+    required this.image,
+    required this.name,
+    required this.count,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           HomeScreen.route(
-            category: "Food",
+            category: category,
           ),
         );
       },
@@ -103,41 +128,13 @@ class MenuScreen extends StatelessWidget {
             height: 60,
             width: 60,
             child: Image.asset(
-              Helper.getAssetName("western2.jpg"),
+              (image),
               fit: BoxFit.cover,
             ),
           ),
         ),
-        name: "Food",
-        count: "120",
-      ),
-    );
-  }
-
-  Widget gesturebeverage(context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          HomeScreen.route(
-            category: "Beverage",
-          ),
-        );
-      },
-      child: MenuCard(
-        imageShape: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: SizedBox(
-            height: 60,
-            width: 60,
-            child: Image.asset(
-              Helper.getAssetName("coffee2.jpg"),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        name: "Beverage",
-        count: "220",
+        name: name,
+        count: count,
       ),
     );
   }

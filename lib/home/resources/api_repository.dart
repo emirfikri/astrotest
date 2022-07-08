@@ -1,4 +1,5 @@
 import 'package:astrotest/home/models/drinkcategory_model.dart';
+import 'package:astrotest/home/models/food_model.dart';
 import 'package:astrotest/home/models/foodcategory_model.dart';
 
 import 'api_provider.dart';
@@ -12,6 +13,10 @@ class ApiRepository {
 
   Future<List<DrinkCategory>?> fetchDrinkCategory() {
     return _provider.fetchDrinkCategory();
+  }
+
+  Future<List<FoodModel>?> fetchFoodModelSelectedCategory({required category}) {
+    return _provider.fetchFoodModelSelectedCategory(category);
   }
 }
 

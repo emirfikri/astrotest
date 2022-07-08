@@ -1,19 +1,16 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, prefer_typing_uninitialized_variables
 
-import 'package:flutter/cupertino.dart';
-
 import '../../../configs/helper/helper.dart';
+import '../../individual/individual_page.dart';
 import '../models/food_model.dart';
 import 'package:flutter/material.dart';
-
-import '../../../services/api_services.dart';
-import '../../individual/pages/view.dart';
 import '../bloc/block_export.dart';
-import '../models/drinkcategory_model.dart';
-import '../models/foodcategory_model.dart';
+import '../widgets/buildError.dart';
+import '../widgets/buildLoading.dart';
 import '../widgets/homeCategoryCard.dart';
 import '../widgets/homeHeader.dart';
 import '../widgets/homeLocation.dart';
+import '../widgets/initialText.dart';
 import '../widgets/itemMenuCard.dart';
 import '../widgets/searchBar.dart';
 
@@ -22,8 +19,6 @@ String? validate(String? value) {
 }
 
 class HomeScreen extends StatefulWidget {
-  static const routeName = "/homeScreen";
-
   final String category;
 
   HomeScreen({Key? key, required this.category}) : super(key: key);
@@ -41,62 +36,118 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final HomeBloc homeBloc = HomeBloc();
-  var menuList;
-  bool isLoading = true;
-  bool allMenuLoading = false;
+  final AllcategoryBloc allcategoryBloc = AllcategoryBloc();
+  final FoodselectedcatBloc foodselectedcatBloc = FoodselectedcatBloc();
   String selectedCategory = '';
   final TextEditingController searchtextcontroller = TextEditingController();
   @override
   void initState() {
-    homeBloc.add(GetFoodCategory());
+    if (RegExp(r"beverage", caseSensitive: false).hasMatch(widget.category)) {
+      allcategoryBloc.add(GetDrinkCategory());
+    } else {
+      allcategoryBloc.add(GetFoodCategory());
+    }
     super.initState();
-    // if (RegExp(r"beverage", caseSensitive: false).hasMatch(widget.category)) {
-    //   getCategoryDrinks();
-    // } else {
-    //   getCategoryFoods();
-    // }
   }
 
-  getCategoryFoods() async {
-    var rawdata = await ApiService()
-        .getApiData("https://www.themealdb.com/api/json/v1/1/categories.php");
-    var responseData = rawdata['categories'] as List;
-    setState(() {
-      // categoryList = responseData.map((e) => FoodCategory.fromJson(e)).toList();
-    });
-    setState(() {
-      isLoading = false;
-    });
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AllcategoryBloc>(
+          create: (BuildContext context) => allcategoryBloc,
+        ),
+        BlocProvider<FoodselectedcatBloc>(
+          create: (BuildContext context) => foodselectedcatBloc,
+        ),
+      ],
+      child: Scaffold(
+        body: Stack(
+          children: [
+            SafeArea(
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    HomeHeader(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    HomeLocation(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SearchBar(
+                      title: "Search Food",
+                      controller: searchtextcontroller,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      children: [
+                        blocCategoryList(),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Popular ${widget.category}",
+                            style: Helper.getTheme(context).headline5,
+                          ),
+                          // TextButton(onPressed: () {}, child: Text("View all"))
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    blocAllMenuList(),
+                    SizedBox(
+                      height: 50,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  getListMealsbyCategory() async {
-    var rawdata = await Future.delayed(
-        Duration(seconds: 1),
-        () => ApiService().getApiData(
-            "https://www.themealdb.com/api/json/v1/1/filter.php?c=$selectedCategory"));
-    var responseData = rawdata['meals'] as List;
-    setState(() {
-      menuList = responseData.map((e) => FoodModel.fromJson(e)).toList();
-      allMenuLoading = false;
-    });
+  Widget blocCategoryList() {
+    return BlocBuilder<AllcategoryBloc, AllcategoryState>(
+      builder: (context, state) {
+        if (state is AllcategoryInitial) {
+          return BuildLoading();
+        } else if (state is AllcategoryLoading) {
+          return BuildLoading();
+        } else if (state is FoodCategoryLoaded) {
+          return allListCategory(thismodel: state.foodCategory);
+        } else if (state is DrinkCategoryLoaded) {
+          // print("object ${state.drinkCategory!.first.name}");
+          return allListCategory(thismodel: state.drinkCategory);
+        } else if (state is CategoryError) {
+          return BuildError(text: state.message!);
+        } else {
+          return BuildError(text: "Uknown Error");
+        }
+      },
+    );
   }
 
-  getCategoryDrinks() async {
-    var rawdata = await ApiService().getApiData(
-        "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list");
-    var responseData = rawdata['drinks'] as List;
-    setState(() {
-      // categoryList =
-      //     responseData.map((e) => DrinkCategory.fromJson(e)).toList();
-    });
-
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  Widget allCategoryList(BuildContext context, {required thismodel}) {
+  Widget allListCategory({required thismodel}) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
@@ -113,13 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () async {
                       if (!RegExp(r"beverage", caseSensitive: false)
                           .hasMatch(widget.category)) {
-                        setState(() {
-                          selectedCategory = thismodel[index].name;
-                          allMenuLoading = true;
-                          menuList = [];
-                        });
-
-                        await getListMealsbyCategory();
+                        foodselectedcatBloc.add(GetFoodSelectedcat(
+                            selectedCat: thismodel[index].name));
+                        selectedCategory = thismodel[index].name;
                       }
                     },
                     child: CategoryCard(
@@ -140,12 +187,30 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget allMenuList() {
+  Widget blocAllMenuList() {
+    return BlocBuilder<FoodselectedcatBloc, FoodselectedcatState>(
+      builder: (context, state) {
+        if (state is FoodselectedcatInitial) {
+          return BuildInitialText(category: widget.category);
+        } else if (state is FoodselectedcatLoading) {
+          return BuildLoading();
+        } else if (state is FoodSelectedCatLoaded) {
+          return allMenuList(thismenulist: state.foodModel!);
+        } else if (state is FoodSelectedCatError) {
+          return BuildError(text: state.message!);
+        } else {
+          return BuildError(text: "Uknown Error");
+        }
+      },
+    );
+  }
+
+  Widget allMenuList({required List<FoodModel> thismenulist}) {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: menuList.length,
+        itemCount: thismenulist.length,
         itemBuilder: (context, index) {
           return Column(
             children: [
@@ -156,17 +221,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(
                       builder: (context) => IndividualItemDetails(
                         category: widget.category,
-                        itemId: menuList[index].id,
+                        itemId: thismenulist[index].id,
                       ),
                     ),
                   );
                 },
                 child: ItemMenuCard(
                   image: Image.network(
-                    menuList[index].image,
+                    thismenulist[index].image,
                     fit: BoxFit.cover,
                   ),
-                  name: menuList[index].name,
+                  name: thismenulist[index].name,
                   selectedCategory: selectedCategory,
                 ),
               ),
@@ -174,136 +239,4 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         });
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return homeBody();
-  }
-
-  Widget test() {
-    return BlocProvider(
-      create: (_) => homeBloc,
-      child: BlocListener<HomeBloc, HomeState>(
-        listener: (context, state) {
-          if (state is HomeError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message!),
-              ),
-            );
-          }
-        },
-        child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (context, state) {
-            if (state is HomeInitial) {
-              return _buildLoading();
-            } else if (state is HomeLoading) {
-              return _buildLoading();
-            } else if (state is FoodCategoryLoaded) {
-              return allCategoryList(
-                context,
-                thismodel: state.foodCategory,
-              );
-            } else if (state is DrinkCategoryLoaded) {
-              return allCategoryList(
-                context,
-                thismodel: state.drinkCategory,
-              );
-            } else {
-              return _buildLoading();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  homeBody() {
-    return Scaffold(
-      body: Stack(
-        children: [
-          SafeArea(
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  HomeHeader(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  HomeLocation(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SearchBar(
-                    title: "Search Food",
-                    controller: searchtextcontroller,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Column(
-                    children: [
-                      test(),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Popular ${widget.category}",
-                          style: Helper.getTheme(context).headline5,
-                        ),
-                        // TextButton(onPressed: () {}, child: Text("View all"))
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  allMenuLoading
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : menuList != null &&
-                              selectedCategory != '' &&
-                              !RegExp(r"beverage", caseSensitive: false)
-                                  .hasMatch(widget.category)
-                          ? allMenuList()
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Text(
-                                widget.category != "Beverage"
-                                    ? "No Category Selected"
-                                    : "For Beverages still under development",
-                                style: widget.category != "Beverage"
-                                    ? Helper.getTheme(context).bodySmall
-                                    : Helper.getTheme(context)
-                                        .bodyMedium
-                                        ?.copyWith(color: Colors.red),
-                              ),
-                            ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLoading() => Center(child: CupertinoActivityIndicator());
 }

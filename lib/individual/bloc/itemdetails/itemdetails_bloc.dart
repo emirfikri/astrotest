@@ -1,9 +1,10 @@
-import 'package:astrotest/blocs/bloc_export.dart';
-import 'package:astrotest/model/fooddetails_model.dart';
+import 'package:astrotest/individual/bloc/bloc_export.dart';
 import 'package:astrotest/services/api_services.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+
+import '../../models/fooddetails_model.dart';
 
 part 'itemdetails_event.dart';
 part 'itemdetails_state.dart';

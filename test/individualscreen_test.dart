@@ -1,4 +1,4 @@
-import 'package:astrotest/model/fooddetails_model.dart';
+import 'package:astrotest/individual/models/fooddetails_model.dart';
 import 'package:astrotest/services/api_services.dart';
 import 'package:flutter_test/flutter_test.dart';
 

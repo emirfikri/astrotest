@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, prefer_typing_uninitialized_variables
 
-import '../../../blocs/bloc_export.dart';
+import '../bloc/bloc_export.dart';
 import 'package:flutter/material.dart';
 import '../../../theme/colors.dart';
 import '../../../configs/helper/constants.dart';
 import '../../../configs/shared_configs.dart';
-import '../../../model/fooddetails_model.dart';
+import '../models/fooddetails_model.dart';
 import '../widgets/individualItemBody.dart';
 import '../widgets/individualItemBottomButton.dart';
 import '../widgets/individualItemHeaderImage.dart';
@@ -16,6 +16,15 @@ class IndividualItemDetails extends StatefulWidget {
   const IndividualItemDetails(
       {Key? key, required this.category, required this.itemId})
       : super(key: key);
+
+  static Route<void> route({required String category, required String itemId}) {
+    return MaterialPageRoute(
+      builder: (context) => IndividualItemDetails(
+        category: category,
+        itemId: itemId,
+      ),
+    );
+  }
 
   @override
   State<IndividualItemDetails> createState() => _IndividualItemDetailsState();
@@ -31,10 +40,6 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
     itemdetailsBloc = ItemdetailsBloc(id: widget.itemId);
     itemdetailsBloc.add(GetFoodDetails());
     checkCache();
-    // var cache = checkCache();
-    // print("cache $cache");
-    // getDetailItembyId();
-
     super.initState();
   }
 
@@ -50,19 +55,6 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
       });
     }
   }
-
-  // Future getDetailItembyId() async {
-  //   var detailsItem1;
-  //   var rawdata = await ApiService().getApiData(
-  //       "https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.itemId}");
-  //   var responseData = rawdata['meals'];
-  //   detailsItem1 =
-  //       responseData.map((e) => FoodDetailsModel.fromJson(e)).toList();
-  //   setState(() {
-  //     detailsItem = detailsItem1[0];
-  //     isLoading = false;
-  //   });
-  // }
 
   imageHeaderButton() {
     return SafeArea(

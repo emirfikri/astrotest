@@ -1,5 +1,5 @@
+import 'package:astrotest/home/home_page.dart';
 import 'package:astrotest/home/models/foodcategory_model.dart';
-import 'package:astrotest/home/view/homeScreen.dart';
 import 'package:astrotest/home/models/food_model.dart';
 import 'package:astrotest/services/api_services.dart';
 import 'package:flutter_test/flutter_test.dart';
