@@ -11,16 +11,13 @@ import '../widgets/individualItemBottomButton.dart';
 import '../widgets/individualItemHeaderImage.dart';
 
 class IndividualItemDetails extends StatefulWidget {
-  final String category;
   final String itemId;
-  const IndividualItemDetails(
-      {Key? key, required this.category, required this.itemId})
+  const IndividualItemDetails({Key? key, required this.itemId})
       : super(key: key);
 
-  static Route<void> route({required String category, required String itemId}) {
+  static Route<void> route({required String itemId}) {
     return MaterialPageRoute(
       builder: (context) => IndividualItemDetails(
-        category: category,
         itemId: itemId,
       ),
     );

@@ -70,32 +70,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     HomeHeader(),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     HomeLocation(),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     SearchBar(
-                      title: "Search Food",
-                      controller: searchtextcontroller,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                        title: "Search Food", controller: searchtextcontroller),
+                    SizedBox(height: 20),
                     Column(
                       children: [
                         blocCategoryList(),
                       ],
                     ),
-                    SizedBox(
-                      height: 50,
-                    ),
+                    SizedBox(height: 50),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
@@ -109,13 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     blocAllMenuList(),
-                    SizedBox(
-                      height: 50,
-                    ),
+                    SizedBox(height: 50),
                   ],
                 ),
               ),
@@ -177,9 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       name: thismodel[index].name,
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+                  SizedBox(width: 10),
                 ],
               );
             }),
@@ -218,11 +200,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () async {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => IndividualItemDetails(
-                        category: widget.category,
-                        itemId: thismenulist[index].id,
-                      ),
+                    IndividualItemDetails.route(
+                      itemId: thismenulist[index].id,
                     ),
                   );
                 },
