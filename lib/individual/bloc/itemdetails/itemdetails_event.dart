@@ -8,35 +8,17 @@ abstract class ItemdetailsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddFoodDetails extends ItemdetailsEvent {
-  final FoodDetailsModel foodDetails;
-  const AddFoodDetails({required this.foodDetails});
-
-  @override
-  List<Object> get props => [foodDetails];
+class GetFoodDetailsCache extends ItemdetailsEvent {
+  final String id;
+  const GetFoodDetailsCache({required this.id});
 }
 
-class GetFoodDetails extends ItemdetailsEvent {}
+class GetFoodDetails extends ItemdetailsEvent {
+  final String id;
+  const GetFoodDetails({required this.id});
+}
 
 class FoodDetailsErrorState extends ItemdetailsEvent {
   final String message;
   const FoodDetailsErrorState({required this.message});
-  @override
-  List<Object> get props => [];
-}
-
-class UpdateFoodDetails extends ItemdetailsEvent {
-  final FoodDetailsModel foodDetails;
-  const UpdateFoodDetails({required this.foodDetails});
-
-  @override
-  List<Object> get props => [foodDetails];
-}
-
-class DeleteFoodDetails extends ItemdetailsEvent {
-  final FoodDetailsModel foodDetails;
-  const DeleteFoodDetails({required this.foodDetails});
-
-  @override
-  List<Object> get props => [foodDetails];
 }

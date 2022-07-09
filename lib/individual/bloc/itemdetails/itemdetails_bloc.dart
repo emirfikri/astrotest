@@ -5,50 +5,41 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/fooddetails_model.dart';
+import '../../resources/api_repository.dart';
 
 part 'itemdetails_event.dart';
 part 'itemdetails_state.dart';
 
 class ItemdetailsBloc extends Bloc<ItemdetailsEvent, ItemdetailsState> {
-  String? id;
-  ItemdetailsBloc({this.id}) : super(const ItemdetailsState()) {
-    on<AddFoodDetails>(onAddFoodDetails);
-    on<UpdateFoodDetails>(onUpdateFoodDetails);
-    on<DeleteFoodDetails>(onDeleteFoodDetails);
-    on<GetFoodDetails>(onGetFoodDetails);
+  ItemdetailsBloc() : super(const ItemdetailsState()) {
+    final ApiRepository apiRepository = ApiRepository();
+
+    on<GetFoodDetailsCache>((event, emit) async {
+      final detailsItem =
+          await apiRepository.fetchFoodDetailsCache(id: event.id);
+      emit(ItemDetailshasCache(foodDetail: detailsItem));
+      if (detailsItem == null) {
+        emit(const ItemDetailsError(message: "error no cache"));
+      }
+    });
+
+    on<GetFoodDetails>((event, emit) async {
+      try {
+        emit(ItemDetailsLoading());
+        final detailsItem = await apiRepository.fetchFoodDetails(id: event.id);
+        await apiRepository.saveFoodDetailsCache(
+            id: event.id, data: detailsItem!);
+        emit(ItemDetailsLoaded(foodDetail: detailsItem));
+        if (detailsItem == null) {
+          emit(
+              const ItemDetailsError(message: "error fetch Selected category"));
+        }
+      } on NetworkError {
+        emit(const ItemDetailsError(
+            message: "Failed to fetch data. is your device online?"));
+      } catch (e) {
+        print("error ${e.toString()}");
+      }
+    });
   }
-
-  void onGetFoodDetails(
-      GetFoodDetails event, Emitter<ItemdetailsState> emit) async {
-    try {
-      emit(ItemDetailsLoading());
-      var detailsItem1;
-      var rawdata = await ApiService().getApiData(
-          "https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}");
-      var responseData = rawdata['meals'];
-      detailsItem1 =
-          responseData.map((e) => FoodDetailsModel.fromJson(e)).toList();
-      var detailsItem = detailsItem1[0];
-
-      emit(ItemDetailsLoaded(foodDetail: detailsItem));
-
-      //add item to cache
-
-    } catch (e) {
-      print("error ${e.toString()}");
-    }
-  }
-
-  void onAddFoodDetails(AddFoodDetails event, Emitter<ItemdetailsState> emit) {
-    final state = this.state;
-    emit(ItemdetailsState(
-        allFoodDetail: List.from(state.allFoodDetail)..add(event.foodDetails)));
-    emit(FinishAddnewData(foodDetail: event.foodDetails));
-  }
-
-  void onUpdateFoodDetails(
-      UpdateFoodDetails event, Emitter<ItemdetailsState> emit) {}
-
-  void onDeleteFoodDetails(
-      DeleteFoodDetails event, Emitter<ItemdetailsState> emit) {}
 }

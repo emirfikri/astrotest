@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, prefer_typing_uninitialized_variables
 
+import 'package:astrotest/individual/models/fooddetails_model.dart';
+
 import '../bloc/bloc_export.dart';
 import 'package:flutter/material.dart';
 import '../../../theme/colors.dart';
 import '../../../configs/helper/constants.dart';
-import '../../../configs/shared_configs.dart';
-import '../models/fooddetails_model.dart';
 import '../widgets/individualItemBody.dart';
 import '../widgets/individualItemBottomButton.dart';
 import '../widgets/individualItemHeaderImage.dart';
@@ -28,29 +28,11 @@ class IndividualItemDetails extends StatefulWidget {
 }
 
 class _IndividualItemDetailsState extends State<IndividualItemDetails> {
-  var detailsItem;
-  final SharedConfigs configs = SharedConfigs();
-  ItemdetailsBloc itemdetailsBloc = ItemdetailsBloc(id: '');
+  ItemdetailsBloc itemdetailsBloc = ItemdetailsBloc();
   @override
   void initState() {
-    WidgetsFlutterBinding.ensureInitialized();
-    itemdetailsBloc = ItemdetailsBloc(id: widget.itemId);
-    itemdetailsBloc.add(GetFoodDetails());
-    checkCache();
+    itemdetailsBloc.add(GetFoodDetailsCache(id: widget.itemId));
     super.initState();
-  }
-
-  checkCache() async {
-    var cache = await configs.readKey("${widget.itemId}");
-    if (cache == null)
-      print("no cache");
-    else {
-      FoodDetailsModel foodCache = FoodDetailsModel.deserialize(cache);
-      // print("foodCache ${foodCache.runtimeType} $foodCache ");
-      setState(() {
-        detailsItem = foodCache;
-      });
-    }
   }
 
   imageHeaderButton() {
@@ -75,9 +57,7 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
                 ),
               ],
             ),
-            SizedBox(
-              height: Constants.height * 0.02,
-            ),
+            SizedBox(height: Constants.height * 0.02),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -93,16 +73,12 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
                 Text("15:06"),
               ],
             ),
-            SizedBox(
-              height: Constants.height * 0.1,
-            ),
+            SizedBox(height: Constants.height * 0.1),
             Container(
               decoration: ShapeDecoration(
                 color: AppColor.lightred,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
               ),
               height: Constants.height * 0.05,
@@ -123,19 +99,20 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
         create: (_) => itemdetailsBloc,
         child: BlocBuilder<ItemdetailsBloc, ItemdetailsState>(
           builder: (context, state) {
-            if (detailsItem != null) {
-              return bodyIndividualItem();
-            } else if (state is ItemdetailsInitial) {
-              return loadingBody();
+            if (state is ItemDetailshasCache) {
+              print("state.foodDetail ${state.foodDetail}");
+              if (state.foodDetail != null) {
+                return bodyIndividualItem(foodDetail: state.foodDetail!);
+              } else {
+                return loadingBody();
+              }
             } else if (state is ItemDetailsLoading) {
               return loadingBody();
             } else if (state is ItemDetailsLoaded) {
-              // print(
-              //     "state.foodDetail.serialize()== ${state.foodDetail.serialize().runtimeType} ${state.foodDetail.serialize()}");
-              configs.writeKey(
-                  "${widget.itemId}", state.foodDetail.serialize());
-              detailsItem = state.foodDetail;
-              return bodyIndividualItem();
+              return bodyIndividualItem(foodDetail: state.foodDetail);
+            } else if (state is ItemDetailsError) {
+              itemdetailsBloc.add(GetFoodDetails(id: widget.itemId));
+              return loadingBody();
             } else {
               return Center(
                 child: Text("Unable To fetch Data"),
@@ -147,35 +124,25 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
     );
   }
 
-  Widget loadingBody() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-  Widget bodyIndividualItem() {
+  Widget bodyIndividualItem({required FoodDetailsModel foodDetail}) {
     return SingleChildScrollView(
       child: Stack(
         children: [
-          IndividualItemImageHeader(
-            image: detailsItem.image,
-          ),
+          IndividualItemImageHeader(image: foodDetail.image),
           imageHeaderButton(),
           SafeArea(
             child: Column(
               children: [
-                SizedBox(
-                  height: Constants.height * 0.3,
-                ),
+                SizedBox(height: Constants.height * 0.3),
                 BottomButton(),
                 Container(
                   color: Colors.white,
                   height: Constants.height * 0.7,
                   width: double.infinity,
                   child: IndividualItemBody(
-                    ingredients: detailsItem.ingredients,
-                    steps: detailsItem.instructions,
-                    ingredientsmeasure: detailsItem.measure,
+                    ingredients: foodDetail.ingredients,
+                    steps: foodDetail.instructions,
+                    ingredientsmeasure: foodDetail.measure,
                   ),
                 ),
               ],
@@ -185,4 +152,6 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
       ),
     );
   }
+
+  Widget loadingBody() => Center(child: CircularProgressIndicator());
 }

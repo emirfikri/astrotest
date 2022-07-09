@@ -10,15 +10,11 @@ class ItemdetailsState extends Equatable {
   List<Object> get props => [allFoodDetail];
 }
 
-class ItemdetailsInitial extends ItemdetailsState {}
-
 class ItemDetailsLoading extends ItemdetailsState {}
 
 class ItemDetailshasCache extends ItemdetailsState {
-  final String id;
-  const ItemDetailshasCache(this.id);
-
-  get currentid => id;
+  final FoodDetailsModel? foodDetail;
+  const ItemDetailshasCache({this.foodDetail});
 }
 
 class ItemDetailsGetFromServer extends ItemdetailsState {}
@@ -47,7 +43,7 @@ class FinishAddnewData extends ItemdetailsState {
   List<Object> get props => [foodDetail];
 }
 
-// class CovidLoaded extends CovidState {
-  // final CovidModel covidModel;
-  // const CovidLoaded(this.covidModel);
-// }
+class ItemDetailsError extends ItemdetailsState {
+  final String? message;
+  const ItemDetailsError({this.message});
+}
