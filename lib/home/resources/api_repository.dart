@@ -18,6 +18,10 @@ class ApiRepository {
   Future<List<FoodModel>?> fetchFoodModelSelectedCategory({required category}) {
     return _provider.fetchFoodModelSelectedCategory(category);
   }
+
+  Future<List?> fetchNull() async {
+    return null;
+  }
 }
 
 class NetworkError extends Error {}

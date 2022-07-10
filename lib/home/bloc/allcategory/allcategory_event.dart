@@ -10,3 +10,5 @@ abstract class AllcategoryEvent extends Equatable {
 class GetFoodCategory extends AllcategoryEvent {}
 
 class GetDrinkCategory extends AllcategoryEvent {}
+
+class GetNull extends AllcategoryEvent {}

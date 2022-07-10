@@ -100,7 +100,6 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
         child: BlocBuilder<ItemdetailsBloc, ItemdetailsState>(
           builder: (context, state) {
             if (state is ItemDetailshasCache) {
-              print("state.foodDetail ${state.foodDetail}");
               if (state.foodDetail != null) {
                 return bodyIndividualItem(foodDetail: state.foodDetail!);
               } else {

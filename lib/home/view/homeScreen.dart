@@ -78,11 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SearchBar(
                         title: "Search Food", controller: searchtextcontroller),
                     SizedBox(height: 20),
-                    Column(
-                      children: [
-                        blocCategoryList(),
-                      ],
-                    ),
+                    Column(children: [blocCategoryList()]),
                     SizedBox(height: 50),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),

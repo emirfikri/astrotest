@@ -15,9 +15,9 @@ class SplashScreenState extends State<AnimatedSplashScreen>
   var _visible = true;
   late AnimationController animationController;
   late Animation<double> animation;
-
+  late Duration duration;
   startTime() async {
-    var duration = const Duration(seconds: 2);
+    duration = const Duration(seconds: 2);
     return Timer(duration, navigationPage);
   }
 
@@ -78,5 +78,5 @@ class SplashScreenState extends State<AnimatedSplashScreen>
   }
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 }

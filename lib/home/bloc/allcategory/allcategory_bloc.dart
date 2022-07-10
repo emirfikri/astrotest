@@ -43,5 +43,8 @@ class AllcategoryBloc extends Bloc<AllcategoryEvent, AllcategoryState> {
             "Failed to fetch data. is your device online?"));
       }
     });
+    on<GetNull>((event, emit) {
+      emit(const CategoryError("mock"));
+    });
   }
 }
