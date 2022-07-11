@@ -5,12 +5,10 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 class ApiService {
-  // final AsyncMemoizer _memoizer = AsyncMemoizer();
   ApiService();
   Dio dio = Dio();
 
   Future getApiData(String linkUrl) async {
-    // var url = "http://avisena.com.my/API/patient/create.php";
     String url = linkUrl;
     var data;
     print("url api trace === !! $url");
@@ -26,7 +24,6 @@ class ApiService {
       }
       data = response.toString();
       final jsonData = jsonDecode(data);
-      // print('data response is ====== $jsonData');
       return jsonData;
     });
   }

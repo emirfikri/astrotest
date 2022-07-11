@@ -1,6 +1,5 @@
 part of 'itemdetails_bloc.dart';
 
-@immutable
 abstract class ItemdetailsEvent extends Equatable {
   const ItemdetailsEvent();
 

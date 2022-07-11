@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:astrotest/configs/helper/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../../configs/helper/helper.dart';
@@ -24,7 +25,7 @@ class HomeLocation extends StatelessWidget {
           ),
           child: DropdownButtonHideUnderline(
             child: SizedBox(
-              width: 250,
+              width: Constants.width * 0.5,
               child: DropdownButton(
                 value: "current location",
                 items: [
@@ -32,7 +33,7 @@ class HomeLocation extends StatelessWidget {
                     value: "current location",
                     child: Text(
                       "Current Location",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 15),
                     ),
                   ),
                 ],

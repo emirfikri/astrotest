@@ -110,6 +110,7 @@ class FoodDetailsModel extends Equatable {
   }
 
   String serialize() {
+    // print("jsonserialize == ${json.encode(toJson())}");
     return json.encode(toJson());
   }
 

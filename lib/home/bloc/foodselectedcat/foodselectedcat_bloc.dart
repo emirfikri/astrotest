@@ -30,5 +30,9 @@ class FoodselectedcatBloc
             "Failed to fetch data. is your device online?"));
       }
     });
+
+    on<GetNullcat>((event, emit) {
+      emit(const FoodSelectedCatError("null"));
+    });
   }
 }

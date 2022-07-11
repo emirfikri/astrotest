@@ -1,6 +1,5 @@
 part of 'itemdetails_bloc.dart';
 
-@immutable
 class ItemdetailsState extends Equatable {
   final List<FoodDetailsModel> allFoodDetail;
 
@@ -17,8 +16,6 @@ class ItemDetailshasCache extends ItemdetailsState {
   const ItemDetailshasCache({this.foodDetail});
 }
 
-class ItemDetailsGetFromServer extends ItemdetailsState {}
-
 class ItemDetailsLoaded extends ItemdetailsState {
   final FoodDetailsModel foodDetail;
   const ItemDetailsLoaded({required this.foodDetail});
@@ -30,14 +27,6 @@ class ItemDetailsLoaded extends ItemdetailsState {
 class AddItemDetails extends ItemdetailsState {
   final FoodDetailsModel foodDetail;
   const AddItemDetails({required this.foodDetail});
-
-  @override
-  List<Object> get props => [foodDetail];
-}
-
-class FinishAddnewData extends ItemdetailsState {
-  final FoodDetailsModel foodDetail;
-  const FinishAddnewData({required this.foodDetail});
 
   @override
   List<Object> get props => [foodDetail];

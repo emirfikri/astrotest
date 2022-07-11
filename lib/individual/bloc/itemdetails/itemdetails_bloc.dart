@@ -1,8 +1,5 @@
 import 'package:astrotest/individual/bloc/bloc_export.dart';
-import 'package:astrotest/services/api_services.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/fooddetails_model.dart';
 import '../../resources/api_repository.dart';
@@ -17,9 +14,11 @@ class ItemdetailsBloc extends Bloc<ItemdetailsEvent, ItemdetailsState> {
     on<GetFoodDetailsCache>((event, emit) async {
       final detailsItem =
           await apiRepository.fetchFoodDetailsCache(id: event.id);
-      emit(ItemDetailshasCache(foodDetail: detailsItem));
+
       if (detailsItem == null) {
         emit(const ItemDetailsError(message: "error no cache"));
+      } else {
+        emit(ItemDetailshasCache(foodDetail: detailsItem));
       }
     });
 

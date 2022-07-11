@@ -12,3 +12,5 @@ class GetFoodSelectedcat extends FoodselectedcatEvent {
 
   const GetFoodSelectedcat({required this.selectedCat});
 }
+
+class GetNullcat extends FoodselectedcatEvent {}

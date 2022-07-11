@@ -16,7 +16,7 @@ void main() {
     fakeFoodCategoryList = FakeFoodCategoryList();
     fakeDrinkCategoryList = FakeDrinkCategoryList();
   });
-  group('AllGamesStatusX ', () {
+  group('AllcategoryBloc ', () {
     AllcategoryBloc buildBloc() {
       return AllcategoryBloc();
     }
@@ -28,10 +28,7 @@ void main() {
 
     test('returns correct values for AllcategoryState.isLoading', () {
       buildBloc().add(GetFoodCategory());
-      // expect(status.isInitial, isFalse);
       expect(AllcategoryLoading(), AllcategoryLoading());
-      // expect(status.isSuccess, isFalse);
-      // expect(status.isError, isFalse);
     });
 
     test('returns correct values for FoodCategoryLoaded.isSuccess', () async {

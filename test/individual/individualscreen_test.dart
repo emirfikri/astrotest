@@ -1,6 +1,11 @@
+import 'package:astrotest/home/bloc/block_export.dart';
+import 'package:astrotest/individual/individual_page.dart';
 import 'package:astrotest/individual/models/fooddetails_model.dart';
-import 'package:astrotest/services/api_services.dart';
+import 'package:flutter/material.dart';
+import '../helpers/api_services.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../helpers/pump_app.dart';
 
 Future<void> main() async {
   List<FoodDetailsModel> foodListmodel = [];
@@ -28,5 +33,30 @@ Future<void> main() async {
         String); // serialize to string to save on storage session
     expect(sessiontoFoodDetails.runtimeType,
         FoodDetailsModel); // from text json to class fooddetails
+  });
+
+  group('IndividualItemDetails View', () {
+    late MockRepository mockRepository;
+    setUp(() {
+      WidgetsFlutterBinding.ensureInitialized();
+      mockRepository = MockRepository();
+    });
+    testWidgets('renders IndividualItemDetails ', (tester) async {
+      Widget testWidget = const MediaQuery(
+          data: MediaQueryData(),
+          child: MaterialApp(
+              home: IndividualItemDetails(
+            itemId: '53016',
+          )));
+      await tester.pumpWidget(
+        RepositoryProvider.value(
+          value: mockRepository,
+          child: testWidget,
+        ),
+      );
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      expect(find.byType(IndividualItemDetails), findsOneWidget);
+    });
   });
 }
