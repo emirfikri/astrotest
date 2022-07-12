@@ -39,8 +39,8 @@ void main() {
       expect(find.byType(MaterialApp), findsOneWidget);
 
       final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
+      // expect(materialApp.darkTheme, equals(MyTheme.dark));
       expect(materialApp.theme, equals(MyTheme.light));
-      expect(materialApp.darkTheme, equals(MyTheme.dark));
     });
 
     testWidgets('renders MenuScreen', (tester) async {

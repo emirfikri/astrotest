@@ -12,7 +12,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Astro Test',
       theme: MyTheme.light,
-      darkTheme: MyTheme.dark,
+      // darkTheme: MyTheme.dark,
       home: AnimatedSplashScreen(),
     );
   }
