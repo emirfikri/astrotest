@@ -133,7 +133,7 @@ class _IndividualItemDetailsState extends State<IndividualItemDetails> {
             child: Column(
               children: [
                 SizedBox(height: Constants.height * 0.3),
-                BottomButton(),
+                GestureDetector(child: BottomButton()),
                 Container(
                   color: Colors.white,
                   height: Constants.height * 0.7,

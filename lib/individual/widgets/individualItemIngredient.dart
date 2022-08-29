@@ -91,7 +91,7 @@ class _IndividualItemIngredientState extends State<IndividualItemIngredient> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text("$count servings"),
+                      Text("$count"),
                     ],
                   ),
                   Spacer(),
@@ -244,6 +244,10 @@ class _IndividualItemIngredientState extends State<IndividualItemIngredient> {
         ),
       ),
     );
+  }
+
+  countWidgetText(count) {
+    return count > 1 ? Text("servings") : Text("serving");
   }
 
   var mydecoration = BoxDecoration(
